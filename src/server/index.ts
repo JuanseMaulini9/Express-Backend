@@ -12,9 +12,12 @@ const server: Express = express();
 // Define Server to use /api and use rootRouter from index.ts in routes
 server.use("/api", routes);
 
+// Statis server
+server.use(express.static("public"));
+
 // TODO: Mongoose Connection
 
-//Security Config
+// Security Config
 server.use(helmet());
 server.use(cors());
 
@@ -29,7 +32,7 @@ server.use(express.json({ limit: "50mb" }));
 
 // Redirection Config
 server.get("/", (req: Request, res: Response) => {
-  res.redirect("api");
+  res.redirect("/api");
 });
 
 export default server;

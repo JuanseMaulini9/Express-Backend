@@ -15,7 +15,7 @@ let server = express();
 let rootRouter = express.Router();
 
 // Activate for request to http://localhost:8000/api
-rootRouter.get("/hello", (req: Request, res: Response) => {
+rootRouter.get("/", (req: Request, res: Response) => {
   LogInfo("GET: http://localhost:8000/api");
   res.send("Welcome to my api restul");
 });
