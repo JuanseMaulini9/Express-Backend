@@ -52,7 +52,9 @@ export class UserController implements IUserController {
       );
     } else {
       LogWarning("[/api/users] DELETE USER REQUEST WITHOUT ID");
-      response = { message: "Provide an ID to remove from database" };
+      response = {
+        message: "Provide an ID to remove from database",
+      };
     }
     return response;
   }
@@ -85,7 +87,9 @@ export class UserController implements IUserController {
       );
     } else {
       LogWarning("[/api/users] UPDATED USER REQUEST WITHOUT ID");
-      response = { message: "Provide an ID to updated an exist user" };
+      response = {
+        message: "Provide an ID to updated an exist user",
+      };
     }
     return response;
   }

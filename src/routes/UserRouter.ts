@@ -18,7 +18,7 @@ userRouter
     //Obtain Response
     const response = await controller.getUsers(id);
     //Send to the client the response
-    return res.send(response);
+    return res.status(200).send(response);
   })
   // DELETE:
   .delete(async (req: Request, res: Response) => {
@@ -31,7 +31,7 @@ userRouter
     //Obtain Response
     const response = await controller.deleteUser(id);
     //Send to the client the response
-    return res.send(response);
+    return res.status(200).send(response);
   })
   //POST
   .post(async (req: Request, res: Response) => {
@@ -39,18 +39,22 @@ userRouter
     let age: any = req?.query?.age;
     let email: any = req?.query?.email;
 
+    // let name2: any = req?.body?.name;
+
+    // LogInfo(`###NAME in body: ${name2}`);
+
     //Controller Instance to execute method
     const controller: UserController = new UserController();
 
     let userDefautl = {
-      name: name || "defautl",
-      email: email || "default",
-      age: age || 18,
+      name: name,
+      email: email,
+      age: age,
     };
     //Obtain Response
     const response = await controller.createUser(userDefautl);
     //Send to the client the response
-    return res.send(response);
+    return res.status(201).send(response);
   })
   .put(async (req: Request, res: Response) => {
     let id: any = req?.query.id;
@@ -58,19 +62,20 @@ userRouter
     let name: any = req?.query?.name;
     let age: any = req?.query?.age;
     let email: any = req?.query?.email;
+
     LogInfo(`Query Param: ${id}, ${name}, ${email}, ${age}`);
 
     const controller: UserController = new UserController();
 
     let user = {
-      name: name || "default",
-      email: email || "default email",
-      age: age || 20,
+      name: name,
+      email: email,
+      age: age,
     };
 
     const response: any = await controller.updateUser(id, user);
 
-    return res.send(response);
+    return res.status(200).send(response);
   });
 
 export default userRouter;
