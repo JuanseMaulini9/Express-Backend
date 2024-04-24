@@ -26,6 +26,6 @@ rootRouter.get("/", (req: Request, res: Response) => {
 server.use("/", rootRouter); // http://localhost:8000/api
 server.use("/hello", helloRouter); // http://localhost:8000/api/hello --> HelloRouter
 server.use("/users", userRouter); // http://localhost:8000/api/users --> UserRouter
-server.use("/auth", authRouter);
+server.use("/auth", authRouter); // http://localhost:8000/api/auth --> AuthRouter
 
 export default server;
