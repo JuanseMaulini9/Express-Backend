@@ -6,6 +6,8 @@ import bodyParser from "body-parser";
 
 let jsonParser = bodyParser.json();
 
+import { verifyToken } from "../middlewares/verifyToken.middleware";
+
 // Router from express
 let userRouter = express.Router();
 
@@ -13,19 +15,23 @@ let userRouter = express.Router();
 userRouter
   .route("/")
   // GET:
-  .get(async (req: Request, res: Response) => {
+  .get(verifyToken, async (req: Request, res: Response) => {
     // Obtain Query Param (ID)
     let id: any = req?.query.id;
+
+    let page: any = req?.query.page || 1;
+    let limit: any = req?.query.limit || 10;
+
     LogInfo(`Query Param: ${id}`);
     //Controller Instance to execute method
     const controller: UserController = new UserController();
     //Obtain Response
-    const response = await controller.getUsers(id);
+    const response = await controller.getUsers(page, limit, id);
     //Send to the client the response
     return res.status(200).send(response);
   })
   // DELETE:
-  .delete(async (req: Request, res: Response) => {
+  .delete(verifyToken, async (req: Request, res: Response) => {
     // Obtain Query Param (ID)
     let id: any = req?.query.id;
     LogInfo(`Query Param: ${id}`);
@@ -38,7 +44,7 @@ userRouter
     return res.status(200).send(response);
   })
 
-  .put(async (req: Request, res: Response) => {
+  .put(verifyToken, async (req: Request, res: Response) => {
     let id: any = req?.query.id;
 
     let name: any = req?.query?.name;
