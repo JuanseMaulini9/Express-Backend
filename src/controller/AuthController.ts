@@ -49,7 +49,7 @@ export class AuthController implements IAuthController {
       };
     } else {
       LogWarning(
-        "[/api/auth/register] Register needs Auth Entity (email && password)"
+        "[/api/auth/login] Login needs Auth Entity (email && password)"
       );
       response = {
         error: "[AUTH ERROR]: Email & password are needed",

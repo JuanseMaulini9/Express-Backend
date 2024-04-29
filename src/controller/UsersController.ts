@@ -6,8 +6,8 @@ import { LogSucces, LogWarning } from "../utils/logger";
 import {
   deleteUserByID,
   getAllUsers,
+  getKatasFromUser,
   getUserById,
-  createUser,
   updateUserById,
 } from "../domain/orm/User.orm";
 
@@ -79,6 +79,26 @@ export class UserController implements IUserController {
       LogWarning("[/api/users] UPDATED USER REQUEST WITHOUT ID");
       response = {
         message: "Provide an ID to updated an exist user",
+      };
+    }
+    return response;
+  }
+
+  @Get("/katas")
+  public async getKatas(
+    @Query() page: number,
+    limit: number,
+    id: string
+  ): Promise<any> {
+    let response: any;
+
+    if (id) {
+      LogSucces(`[/api/users/katas] GET KATA FROM USER BY ID: ${id}`);
+      response = await getKatasFromUser(page, limit, id);
+    } else {
+      LogSucces("[/api/users/katas] GET ALL KATAS WITHOUT ID");
+      response = {
+        message: "ID form usser is needed",
       };
     }
     return response;

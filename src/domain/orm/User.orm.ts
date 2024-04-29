@@ -7,6 +7,9 @@ import jwt from "jsonwebtoken";
 
 import dotenv from "dotenv";
 import { UserResponse } from "../types/UserResponse";
+import { kataEntity } from "../entities/Kata.entity";
+import { IKata } from "../interfaces/IKata.interface";
+import mongoose, { ObjectId } from "mongoose";
 
 dotenv.config();
 const secret = process.env.SECRETTEXT || "MYSECRETKEY";
@@ -27,7 +30,7 @@ export const getAllUsers = async (
     // Search all users(using pagination)
     await userModel
       .find()
-      .select("name email age")
+      .select("name email age katas")
       .limit(limit)
       .skip((page - 1) * limit)
       .exec()
@@ -56,7 +59,7 @@ export const getUserById = async (userId: string): Promise<any | undefined> => {
     let userModel = userEntity();
 
     // Search user By ID
-    return await userModel.findById(userId).select("name email age");
+    return await userModel.findById(userId).select("name email age katas");
   } catch (error) {
     LogError(`[ORM ERROR]: Getting user by ID: ${error}`);
   }
@@ -70,17 +73,6 @@ export const deleteUserByID = async (id: string): Promise<any | undefined> => {
     return await userModel.deleteOne({ _id: id });
   } catch (error) {
     LogError(`[ORM ERROR]: Deleting user by ID: ${error}`);
-  }
-};
-
-//Create new user
-export const createUser = async (user: any): Promise<any | undefined> => {
-  try {
-    let userModel = userEntity();
-
-    return await userModel.create(user);
-  } catch (error) {
-    LogError(`[ORM ERROR]: Creating User: ${error}`);
   }
 };
 
@@ -145,6 +137,43 @@ export const loginUser = async (auth: IAuth): Promise<any | undefined> => {
     };
   } catch (error) {
     LogError(`[ORM ERROR]: Login User: ${error}`);
+  }
+};
+
+export const getKatasFromUser = async (
+  page: number,
+  limit: number,
+  id: string
+): Promise<any[] | undefined> => {
+  try {
+    let userModel = userEntity();
+    let katasModel = kataEntity();
+
+    let response: any = {};
+
+    console.log("USER ID", id);
+
+    await userModel
+      .findById(id)
+      .then(async (user: IUser) => {
+        response.user = user.email;
+
+        await katasModel
+          .find({ _id: { $in: user.katas } })
+          .then((katas: IKata[]) => {
+            console.log("KATAS", katas);
+            response.katas = katas;
+          });
+      })
+      .catch((error) => {
+        LogError(`[ORM ERROR]: Obtaining User: ${error}`);
+      });
+
+    return response;
+
+    // return await userModel.find();
+  } catch (error) {
+    LogError(`[ORM ERROR]: Getting all users: ${error}`);
   }
 };
 

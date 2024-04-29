@@ -66,4 +66,19 @@ userRouter
     return res.status(200).send(response);
   });
 
+userRouter
+  .route("/katas")
+  .get(verifyToken, async (req: Request, res: Response) => {
+    let id: any = req?.query.id;
+
+    let page: any = req?.query.page || 1;
+    let limit: any = req?.query.limit || 10;
+
+    const controller: UserController = new UserController();
+
+    const response = await controller.getKatas(page, limit, id);
+
+    return res.status(200).send(response);
+  });
+
 export default userRouter;
